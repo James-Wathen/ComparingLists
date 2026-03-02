@@ -1,0 +1,14 @@
+C:\Users\jmaes\OneDrive\Documents\VSCode\C# fun\ComparingLists\bin\Debug\net10.0\ComparingLists.exe
+C:\Users\jmaes\OneDrive\Documents\VSCode\C# fun\ComparingLists\bin\Debug\net10.0\ComparingLists.deps.json
+C:\Users\jmaes\OneDrive\Documents\VSCode\C# fun\ComparingLists\bin\Debug\net10.0\ComparingLists.runtimeconfig.json
+C:\Users\jmaes\OneDrive\Documents\VSCode\C# fun\ComparingLists\bin\Debug\net10.0\ComparingLists.dll
+C:\Users\jmaes\OneDrive\Documents\VSCode\C# fun\ComparingLists\bin\Debug\net10.0\ComparingLists.pdb
+C:\Users\jmaes\OneDrive\Documents\VSCode\C# fun\ComparingLists\obj\Debug\net10.0\ComparingLists.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\jmaes\OneDrive\Documents\VSCode\C# fun\ComparingLists\obj\Debug\net10.0\ComparingLists.AssemblyInfoInputs.cache
+C:\Users\jmaes\OneDrive\Documents\VSCode\C# fun\ComparingLists\obj\Debug\net10.0\ComparingLists.AssemblyInfo.cs
+C:\Users\jmaes\OneDrive\Documents\VSCode\C# fun\ComparingLists\obj\Debug\net10.0\ComparingLists.csproj.CoreCompileInputs.cache
+C:\Users\jmaes\OneDrive\Documents\VSCode\C# fun\ComparingLists\obj\Debug\net10.0\ComparingLists.dll
+C:\Users\jmaes\OneDrive\Documents\VSCode\C# fun\ComparingLists\obj\Debug\net10.0\refint\ComparingLists.dll
+C:\Users\jmaes\OneDrive\Documents\VSCode\C# fun\ComparingLists\obj\Debug\net10.0\ComparingLists.pdb
+C:\Users\jmaes\OneDrive\Documents\VSCode\C# fun\ComparingLists\obj\Debug\net10.0\ComparingLists.genruntimeconfig.cache
+C:\Users\jmaes\OneDrive\Documents\VSCode\C# fun\ComparingLists\obj\Debug\net10.0\ref\ComparingLists.dll
