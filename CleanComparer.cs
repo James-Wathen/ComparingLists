@@ -51,14 +51,14 @@ class CleanComparer
         int[] RandCopy = new int[list.Length];
         for (int i = 0; i < list.Length; i++)//swap every item in list1 for a random one from its copy
         {
-            int index = RandomIndex(Used, list, i);
+            int index = ExclusiveRandomIndex(Used, list, i);
             if (index==-1)
                 Console.WriteLine("RandomIndex for loop did not return index");
             RandCopy[i] = Copy[index];//index should be different each time
         }
         return RandCopy;
     }
-    static int RandomIndex(List<int> used, int[] list, int i)
+    static int ExclusiveRandomIndex(List<int> used, int[] list, int i)
     {
         Random rand = new Random();
         int RandomInt = rand.Next(0, list.Length);
@@ -69,7 +69,7 @@ class CleanComparer
                 FoundInUsed=true;//index is already used
         }
         if (FoundInUsed)
-            return RandomIndex(used, list, i);//find another index
+            return ExclusiveRandomIndex(used, list, i);//find another index
         else
         {
             used.Add(RandomInt);
