@@ -1,79 +1,139 @@
 using System;
 using System.ComponentModel;
 using System.Data.Common;
+using System.Security.Principal;
 using System.Text;
-
+using System.Xml.Schema;
 using Microsoft.VisualBasic;
-
+//this is the same general idea as ComplicatedComparer except it uses c#'s abilities and more efficient algorithms, with some added features
 class CleanComparer
 {
     static void Main(string[] args)
     {
-        int length = 6;
-        int NoLists = 3;
-        CSVListGenerator(length, NoLists);
-
-        //Reading from a CSV
-        int[][] lists = new int[NoLists][];
+        int Length = 15;
+        int NoLists = 2;
+        int[,] lists = new int[NoLists, Length];
+        for (int i =0; i < Length; i++)
+        {
+            lists[0, i] = i;
+        }
+        lists = ShiftHalfCopy(lists, 1);
+        ToCSVListConverter(lists);
+        int [,] arrays = FromCSVListConverter(NoLists, Length);
+        double FinalScore=Similarity(arrays);
+        if (FinalScore!=-1)
+            Console.WriteLine($"The ordering similarity of list1 and list2 is {FinalScore}%");
+    }
+    static int[,] ShiftHalfCopy(int[,] list, int Row)
+    // it is pretty cool, as I intuitively expected this gives a similarity of 50%. Meaning that many mid length distances are better than longest and shortest distances
+    //Idea here is to make a list where every item is Length/2 away from itself
+    {
+        int Length = list.GetLength(0);
+        int[,] Shifted = list;
+        for (int i = 0; i < Length; i++)
+        {
+            try
+            {
+                Shifted[Row, i] = list[Row, i+Length/2];
+            }
+            catch//if i+Length/2>Length
+            {
+                Shifted[Row, i] = list[Row, i-Length/2];
+            }
+        }
+        return Shifted;
+    }
+    static double Similarity(int[,]list)
+    {
+        int Length = list.GetLength(0);
+        if (list.GetLength(0)>2)
+        {
+            Console.WriteLine("Only two lists please");
+            return -1;
+        }
+        else
+        {
+            double scores = 0;
+            int[] List1 = GetRow(list, 0);
+            int[] List2 = GetRow(list, 1);
+            for (int i = 0; i < Length; i++)
+            {
+                if (Array.IndexOf(List1, i) !=-1 || Array.IndexOf(List2, i) !=-1)
+                    scores+=1-Math.Abs(Array.IndexOf(List1, i)-Array.IndexOf(List2, i)) /(double)Length;//i - index of list1[i] in list 2, therefore is the difference of the same items index
+            }
+            return scores/Length*100;
+        }
+    }
+    static int[] GetRow(int[,] list, int row)
+    {
+        int Length = list.GetLength(0);
+        int[] listRow = new int[Length];
+        for (int i = 0; i < Length; i++)
+        {
+            listRow[i] = list[row, i];
+        }
+        return listRow;
+    }
+    static int[,] FromCSVListConverter(int NoLists, int Length)
+    {
+        int[,] lists = new int[NoLists, Length];
         var rows = File.ReadAllLines($"lists.csv").Skip(1);
+        rows.Count();
         int count = 0;
         foreach (var row in rows)//look through each row in file
         {
-            lists[count++] = Array.ConvertAll(row.Split(","), int.Parse);//makes a 1d array of that row of ints
+            int[] list = Array.ConvertAll(row.Split(","), int.Parse);//makes a 1d array of that row of ints
+            for (int i = 0; i < NoLists; i++)
+            {
+                lists[i, count]=list[i];//count is the number of rows, so should be the length and therefore how far into lists[i] to place the item list[i]
+            }
+            count++;
         }
-
-        //Normal stuff
-
+        return lists;
     }
-    static void CSVListGenerator(int length, int NoLists)
+    static void ToCSVListConverter(int[,] listsArray)
     {
-        var lists = new StringBuilder();
-        int[] OGlist = new int[length];
-        for (int i = 0; i < length; i++)
+        var listsSB = new StringBuilder();
+        int NoLists = listsArray.GetLength(0);
+        int Length = listsArray.GetLength(1);//assuming each list to be a permutation
+        for (int i = -1; i < Length; i++)
         {
-            OGlist[i] = i;
+            if (i>-1)
+                listsSB.AppendLine();
+            for (int j = 0; j < NoLists; j++)
+            {
+                if(i==-1)//title
+                {
+                    if (i<NoLists-1)
+                        listsSB.Append($"List{j},");
+                    else
+                    listsSB.Append($"List{j}");//makes top row entirely titles
+                }
+                else if (j!=NoLists-1)//not the end of that row
+                {
+                   listsSB.Append($"{listsArray[j,i]},");
+                }
+                else//end of that row
+                {
+                    listsSB.Append($"{listsArray[j,i]}");
+                }
+            }
         }
-        for (int i = 0; i < NoLists; i++)
-        {
-            if (i<NoLists-1)
-                lists.AppendLine($"List{i}, ");
-            else
-            lists.AppendLine($"List{i}");
-            lists.Append(RandomizedCopy(OGlist));
-        }
-
-        File.WriteAllText("lists.csv", lists.ToString());
+        File.WriteAllText("lists.csv", listsSB.ToString());
     }
-    static int[] RandomizedCopy(int[] list)
-    {   
-        int[] Copy=list;
-        List<int> Used = new List<int>{};
-        int[] RandCopy = new int[list.Length];
-        for (int i = 0; i < list.Length; i++)//swap every item in list1 for a random one from its copy
-        {
-            int index = ExclusiveRandomIndex(Used, list, i);
-            if (index==-1)
-                Console.WriteLine("RandomIndex for loop did not return index");
-            RandCopy[i] = Copy[index];//index should be different each time
-        }
-        return RandCopy;
-    }
-    static int ExclusiveRandomIndex(List<int> used, int[] list, int i)
+    static int[] RandomizedCopy(int[] list)//i found this other algorithm 'Fisher-Yates' from chatGPT and its pretty cool
+    //Randomly pick a number (j) from 0-i, swap the item from j with item at i, this randomly picks numbers to pile at the end.
+    //This way there is no need to worry about collisions
     {
-        Random rand = new Random();
-        int RandomInt = rand.Next(0, list.Length);
-        bool FoundInUsed=false;//assume it is not yet found
-        for (int j = 0; j < used.Count; j++)//cycle through used indeces, if it is in there then it is not used
+        var rand = Random.Shared;//this will produce a new number each time it is called
+        int Length = list.Length;
+        for (int i = 0; i< Length; i++)
         {
-            if (used[j] == RandomInt)
-                FoundInUsed=true;//index is already used
+            int j = rand.Next(i, Length);// [i, Length)
+            int cache = list[i];
+            list[i]=list[j];
+            list[j] = cache;
         }
-        if (FoundInUsed)
-            return ExclusiveRandomIndex(used, list, i);//find another index
-        else
-        {
-            used.Add(RandomInt);
-            return RandomInt;
-        }
+        return list;
     }
 }

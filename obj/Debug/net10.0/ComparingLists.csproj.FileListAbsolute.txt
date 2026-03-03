@@ -12,3 +12,4 @@ C:\Users\jmaes\OneDrive\Documents\VSCode\C# fun\ComparingLists\obj\Debug\net10.0
 C:\Users\jmaes\OneDrive\Documents\VSCode\C# fun\ComparingLists\obj\Debug\net10.0\ComparingLists.pdb
 C:\Users\jmaes\OneDrive\Documents\VSCode\C# fun\ComparingLists\obj\Debug\net10.0\ComparingLists.genruntimeconfig.cache
 C:\Users\jmaes\OneDrive\Documents\VSCode\C# fun\ComparingLists\obj\Debug\net10.0\ref\ComparingLists.dll
+C:\Users\jmaes\OneDrive\Documents\VSCode\C# fun\ComparingLists\obj\Debug\net10.0\ComparingLists.sourcelink.json

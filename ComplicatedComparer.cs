@@ -24,7 +24,7 @@ class ComplicatedComparer
             list[i] = i;
         }
         int[] list1 = list;//RandomizedCopy(list);
-        int[] list2 = ShiftHalfCopy(list1);
+        int[] list2 = ReversedCopy(list1);
         int[,] SortedList2 = MergeSort(AddInitialIndex(list2));
         int searchFor=2;
         Console.WriteLine($"List1={PrintArray(AddInitialIndex(list1))}\nList2={PrintArray(AddInitialIndex(list2))}\nSorted list2={PrintArray(SortedList2)}\nA {searchFor} is in spot {BinaryIndexSearch(SortedList2, searchFor, 0, SortedList2.GetLength(0)-1)} of list 2");
@@ -42,16 +42,23 @@ class ComplicatedComparer
             return -1;
         }
         int Length=list1.Length;
+        int[,] IndexedList1 = AddInitialIndex(list1);
         int[,] IndexedList2 = AddInitialIndex(list2);
-        int[,] sorted = MergeSort(IndexedList2);//only make a sorted and indexed version of one of the lists, as we search for each item in list1 in the sorted list 2
+        int[,] sorted1 = MergeSort(IndexedList1);
+        int[,] sorted2 = MergeSort(IndexedList2);//only make a sorted and indexed version of one of the lists, as we search for each item in list1 in the sorted list 2
         int PairCount=0;
         double scores = 0;
         bool match = false;//not yet a match at the start of every loop through list2
         for (int i = 0; i < Length; i++)
         {
-            scores+=1-Math.Abs(i-BinaryIndexSearch(sorted, list1[i], 0, list2.Length)) /(double)Length;//i - index of list1[i] in list 2, therefore is the difference of the same items index
-            PairCount++;
-            match=true;//new pair so count can go back to 0        
+            int Index1 = BinaryIndexSearch(sorted1, i, 0, Length);
+            int Index2 = BinaryIndexSearch(sorted2, i, 0, Length);     
+            if (Index1 != -1 || Index2 != -1)
+            {
+                scores+=1-Math.Abs(Index1-Index2)/(double)Length;//i - index of list1[i] in list 2, therefore is the difference of the same items index
+                PairCount++;
+                match=true;//new pair so count can go back to 0                        
+            } 
         }
         if (!match)//when it has cycled through all values in list2 and there are no pairs with list1 even though list1 still has more possible pairs
         {
